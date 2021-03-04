@@ -1,13 +1,14 @@
 # See https://www.rapids.science/latest/setup/configuration/#database-credentials
 DATABASE_GROUP: &database_group
-  MY_GROUP
+  ACC_FREQ
 
 # See https://www.rapids.science/latest/setup/configuration/#timezone-of-your-study
 TIMEZONE: &timezone
   America/New_York
 
 # See https://www.rapids.science/latest/setup/configuration/#participant-files
-PIDS: [test01]
+PIDS: [p02, p05, p06, p09] # duplicates: p01, p03, p08; empty: p04, p07
+ACC_FREQ: [30, 15, 10, 5, 1]
 
 # See https://www.rapids.science/latest/setup/configuration/#automatic-creation-of-participant-files
 CREATE_PARTICIPANT_FILES:
@@ -29,8 +30,10 @@ CREATE_PARTICIPANT_FILES:
 
 # See https://www.rapids.science/latest/setup/configuration/#time-segments
 TIME_SEGMENTS: &time_segments
-  TYPE: PERIODIC # FREQUENCY, PERIODIC, EVENT
-  FILE: "data/external/timesegments_periodic.csv"
+  TYPE: FREQUENCY # 5 min features
+  FILE: "data/external/timesegments_frequency.csv"
+  # TYPE: PERIODIC # daily features
+  # FILE: "data/external/timesegments_periodic.csv"
   INCLUDE_PAST_PERIODIC_SEGMENTS: FALSE # Only relevant if TYPE=PERIODIC, see docs
 
 
@@ -56,13 +59,13 @@ PHONE_ACCELEROMETER:
   TABLE: accelerometer
   PROVIDERS:
     RAPIDS:
-      COMPUTE: False
+      COMPUTE: True
       FEATURES: ["maxmagnitude", "minmagnitude", "avgmagnitude", "medianmagnitude", "stdmagnitude"]
       SRC_FOLDER: "rapids" # inside src/features/phone_accelerometer
       SRC_LANGUAGE: "python"
     
     PANDA:
-      COMPUTE: False
+      COMPUTE: True
       VALID_SENSED_MINUTES: False
       FEATURES:
         exertional_activity_episode: ["sumduration", "maxduration", "minduration", "avgduration", "medianduration", "stdduration"]

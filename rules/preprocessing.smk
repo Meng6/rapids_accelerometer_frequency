@@ -37,6 +37,35 @@ rule download_phone_data:
     script:
         "../src/data/download_phone_data.R"
 
+rule downsample_accelerometer_data:
+    input:
+        "data/raw/{pid}/phone_accelerometer_with_datetime.csv"
+    params:
+        freq = "{freq}"
+    output:
+        "data/raw/{pid}/phone_accelerometer_with_datetime_{freq}hz.csv"
+    script:
+        "../src/data/downsample_accelerometer_data.py"
+
+rule acc_mean_std:
+    input:
+        expand("data/processed/features/{{pid}}/phone_accelerometer_{freq}hz.csv", freq=config["ACC_FREQ"])
+    params:
+        freq = config["ACC_FREQ"]
+    output:
+        "data/interim/{pid}/acc_mean_std.csv"
+    script:
+        "../src/data/acc_mean_std.py"
+
+rule acc_mse_corr_cs:
+    input:
+        expand("data/processed/features/{{pid}}/phone_accelerometer_{freq}hz.csv", freq=config["ACC_FREQ"])
+    output:
+        "data/interim/{pid}/acc_mse_corr_cs.csv"
+    script:
+        "../src/data/acc_mse_corr_cs.py"
+
+
 rule download_fitbit_data:
     input:
         participant_file = "data/external/participant_files/{pid}.yaml",

@@ -4,7 +4,7 @@ rule join_features_from_providers:
     wildcard_constraints:
         sensor_key = '(phone|fitbit|empatica).*'
     output:
-        "data/processed/features/{pid}/{sensor_key}.csv"
+        "data/processed/features/{pid}/{sensor_key}_{freq}hz.csv"
     script:
         "../src/features/utils/join_features_from_providers.R"
 
@@ -36,27 +36,27 @@ rule phone_data_yield_r_features:
 
 rule phone_accelerometer_python_features:
     input:
-        sensor_data = "data/raw/{pid}/phone_accelerometer_with_datetime.csv",
+        sensor_data = "data/raw/{pid}/phone_accelerometer_with_datetime_{freq}hz.csv",
         time_segments_labels = "data/interim/time_segments/{pid}_time_segments_labels.csv"
     params:
         provider = lambda wildcards: config["PHONE_ACCELEROMETER"]["PROVIDERS"][wildcards.provider_key.upper()],
         provider_key = "{provider_key}",
         sensor_key = "phone_accelerometer"
     output:
-        "data/interim/{pid}/phone_accelerometer_features/phone_accelerometer_python_{provider_key}.csv"
+        "data/interim/{pid}/phone_accelerometer_features_{freq}hz/phone_accelerometer_python_{provider_key}.csv"
     script:
         "../src/features/entry.py"
 
 rule phone_accelerometer_r_features:
     input:
-        sensor_data = "data/raw/{pid}/phone_accelerometer_with_datetime.csv",
+        sensor_data = "data/raw/{pid}/phone_accelerometer_with_datetime_{freq}hz.csv",
         time_segments_labels = "data/interim/time_segments/{pid}_time_segments_labels.csv"
     params:
         provider = lambda wildcards: config["PHONE_ACCELEROMETER"]["PROVIDERS"][wildcards.provider_key.upper()],
         provider_key = "{provider_key}",
         sensor_key = "phone_accelerometer"
     output:
-        "data/interim/{pid}/phone_accelerometer_features/phone_accelerometer_r_{provider_key}.csv"
+        "data/interim/{pid}/phone_accelerometer_features_{freq}hz/phone_accelerometer_r_{provider_key}.csv"
     script:
         "../src/features/entry.R"
 

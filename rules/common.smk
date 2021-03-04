@@ -3,7 +3,8 @@ def find_features_files(wildcards):
     feature_files = []
     for provider_key, provider in config[(wildcards.sensor_key).upper()]["PROVIDERS"].items():
         if provider["COMPUTE"]:
-            feature_files.extend(expand("data/interim/{{pid}}/{sensor_key}_features/{sensor_key}_{language}_{provider_key}.csv", sensor_key=wildcards.sensor_key.lower(), language=provider["SRC_LANGUAGE"].lower(), provider_key=provider_key.lower()))
+            # test diff accelerometer frequencies
+            feature_files.extend(expand("data/interim/{{pid}}/{sensor_key}_features_{{freq}}hz/{sensor_key}_{language}_{provider_key}.csv", sensor_key=wildcards.sensor_key.lower(), language=provider["SRC_LANGUAGE"].lower(), provider_key=provider_key.lower()))
     return(feature_files)
 
 def optional_steps_sleep_input(wildcards):

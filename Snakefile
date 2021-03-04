@@ -115,10 +115,13 @@ for provider in config["PHONE_ACCELEROMETER"]["PROVIDERS"].keys():
     if config["PHONE_ACCELEROMETER"]["PROVIDERS"][provider]["COMPUTE"]:
         files_to_compute.extend(expand("data/raw/{pid}/phone_accelerometer_raw.csv", pid=config["PIDS"]))
         files_to_compute.extend(expand("data/raw/{pid}/phone_accelerometer_with_datetime.csv", pid=config["PIDS"]))
-        files_to_compute.extend(expand("data/interim/{pid}/phone_accelerometer_features/phone_accelerometer_{language}_{provider_key}.csv", pid=config["PIDS"], language=config["PHONE_ACCELEROMETER"]["PROVIDERS"][provider]["SRC_LANGUAGE"].lower(), provider_key=provider.lower()))
-        files_to_compute.extend(expand("data/processed/features/{pid}/phone_accelerometer.csv", pid=config["PIDS"]))
-        files_to_compute.extend(expand("data/processed/features/{pid}/all_sensor_features.csv", pid=config["PIDS"]))
-        files_to_compute.append("data/processed/features/all_participants/all_sensor_features.csv")
+        files_to_compute.extend(expand("data/raw/{pid}/phone_accelerometer_with_datetime_{freq}hz.csv", pid=config["PIDS"], freq=config["ACC_FREQ"]))
+        files_to_compute.extend(expand("data/interim/{pid}/phone_accelerometer_features_{freq}hz/phone_accelerometer_{language}_{provider_key}.csv", pid=config["PIDS"], freq=config["ACC_FREQ"], language=config["PHONE_ACCELEROMETER"]["PROVIDERS"][provider]["SRC_LANGUAGE"].lower(), provider_key=provider.lower()))
+        files_to_compute.extend(expand("data/processed/features/{pid}/phone_accelerometer_{freq}hz.csv", pid=config["PIDS"], freq=config["ACC_FREQ"]))
+        files_to_compute.extend(expand("data/interim/{pid}/acc_mean_std.csv", pid=config["PIDS"]))
+        files_to_compute.extend(expand("data/interim/{pid}/acc_mse_corr_cs.csv", pid=config["PIDS"]))
+        # files_to_compute.extend(expand("data/processed/features/{pid}/all_sensor_features.csv", pid=config["PIDS"]))
+        # files_to_compute.append("data/processed/features/all_participants/all_sensor_features.csv")
 
 for provider in config["PHONE_APPLICATIONS_FOREGROUND"]["PROVIDERS"].keys():
     if config["PHONE_APPLICATIONS_FOREGROUND"]["PROVIDERS"][provider]["COMPUTE"]:
